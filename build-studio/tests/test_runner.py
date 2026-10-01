@@ -25,7 +25,7 @@ def test_start_task_sends_custom_agent_and_pr(monkeypatch):
     out = asyncio.run(github.start_task("do it"))
     sent = json.loads(route.calls[0].request.content)
     assert out["id"] == "t1" and sent["custom_agent"] == "brd" and sent["create_pull_request"] is True
-    assert sent["base_ref"] == "main" and sent["model"] == config.MODEL
+    assert sent["base_ref"] == config.BASE_BRANCH == "poc-workspace" and sent["model"] == config.MODEL
     h = route.calls[0].request.headers
     assert h["authorization"] == "Bearer pat-secret" and h["x-github-api-version"] == config.API_VERSION
 
@@ -78,3 +78,26 @@ def test_live_mode_without_pat_is_refused(monkeypatch):
     monkeypatch.setattr(config, "PAT", "")
     r = TestClient(main.app).get("/v1/remote-sha", headers={"Authorization": "Bearer tok"})
     assert r.status_code == 503
+
+
+def test_push_targets_workspace_branch_not_main(monkeypatch, tmp_path):
+    _live(monkeypatch)
+    calls = []
+    monkeypatch.setattr(github.subprocess, "run",
+                        lambda args, **kw: calls.append(args) or type("R", (), {"returncode": 0, "stdout": "sha\n", "stderr": ""})())
+    github.push(tmp_path)
+    push = next(a for a in calls if a[1] == "push")
+    assert push[-1] == "HEAD:refs/heads/poc-workspace"
+
+
+import pytest
+
+
+@pytest.mark.parametrize("branch", ["main", "master"])
+def test_runner_refuses_protected_branches(monkeypatch, tmp_path, branch):
+    _live(monkeypatch)
+    monkeypatch.setattr(config, "BASE_BRANCH", branch)
+    with pytest.raises(RuntimeError, match="protected branch"):
+        github.push(tmp_path)
+    with pytest.raises(RuntimeError, match="protected branch"):
+        asyncio.run(github.start_task("x"))

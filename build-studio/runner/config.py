@@ -14,5 +14,8 @@ SHARED_TOKEN = os.getenv("RUNNER_SHARED_TOKEN", "")
 MODE = os.getenv("RUNNER_MODE", "live")  # live | fake
 API_VERSION = "2026-03-10"
 GITHUB_API = os.getenv("GITHUB_API_URL", "https://api.github.com")
-BASE_BRANCH = "main"
+# The workspace lives on its own orphan branch of the repo (ADR-002). The runner refuses to
+# push to, or start tasks against, a branch that could hold the Studio source.
+BASE_BRANCH = os.getenv("GITHUB_BASE_BRANCH", "poc-workspace")
+PROTECTED_BRANCHES = ("main", "master")
 MAX_INPUT_CHARS = int(os.getenv("MAX_REQUIREMENT_CHARS", "8000"))

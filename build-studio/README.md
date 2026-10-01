@@ -26,7 +26,7 @@ copy .env.example .env                         # fill in RUNNER_SHARED_TOKEN (+ 
 
 `RUNNER_MODE=fake` runs everything against recorded fixtures with no GitHub calls. Put `FAKE_SCENARIO=vague|mid|good` in the requirement text to pick the outcome.
 
-Live mode needs a private GitHub repo with the Copilot cloud agent enabled, and a fine-grained PAT on that repo only (Agent tasks RW, Contents RW, Pull requests RW, Metadata R). Run `scripts/spike_copilot_task.py` once first.
+Live mode needs a private GitHub repo with the Copilot cloud agent enabled (for the POC, the same repo as this code; the workspace goes on the `poc-workspace` branch, never `main`), and a fine-grained PAT on that repo only (Agent tasks RW, Contents RW, Pull requests RW, Metadata R). Run `scripts/spike_copilot_task.py` once first.
 
 ## Layout
 

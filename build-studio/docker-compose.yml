@@ -8,6 +8,7 @@ services:
       - "127.0.0.1:8020:8020"
     environment:
       RUNNER_URL: http://runner:8021
+      GITHUB_BASE_BRANCH: ${GITHUB_BASE_BRANCH:-poc-workspace}
       RUNNER_SHARED_TOKEN: ${RUNNER_SHARED_TOKEN:?set RUNNER_SHARED_TOKEN in .env}
       RUN_TIMEOUT_SECONDS: ${RUN_TIMEOUT_SECONDS:-1200}
     volumes:
@@ -24,6 +25,7 @@ services:
       RUNNER_SHARED_TOKEN: ${RUNNER_SHARED_TOKEN:?set RUNNER_SHARED_TOKEN in .env}
       GITHUB_COPILOT_PAT: ${GITHUB_COPILOT_PAT:-}   # only the runner ever receives the PAT
       GITHUB_REPO: ${GITHUB_REPO:-}
+      GITHUB_BASE_BRANCH: ${GITHUB_BASE_BRANCH:-poc-workspace}
       COPILOT_MODEL: ${COPILOT_MODEL:-claude-sonnet-4.6}
     volumes:
       - workspaces:/data/workspaces

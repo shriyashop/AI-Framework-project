@@ -9,6 +9,11 @@ import httpx
 from . import config
 
 
+def require_workspace_branch() -> None:
+    if config.BASE_BRANCH in config.PROTECTED_BRANCHES:
+        raise RuntimeError(f"refusing to use protected branch '{config.BASE_BRANCH}' for the workspace")
+
+
 def _headers(raw: bool = False) -> dict:
     return {
         "Authorization": f"Bearer {config.PAT}",
@@ -22,6 +27,7 @@ def _client() -> httpx.AsyncClient:
 
 
 async def start_task(prompt: str) -> dict:
+    require_workspace_branch()
     body = {"prompt": prompt, "model": config.MODEL, "custom_agent": config.CUSTOM_AGENT,
             "create_pull_request": True, "base_ref": config.BASE_BRANCH}
     async with _client() as c:
@@ -73,7 +79,8 @@ async def remote_sha() -> str | None:
 
 
 def push(workspace: Path) -> str:
-    """Push main using the PAT from process env only; nothing is written to disk."""
+    """Push the workspace branch using the PAT from process env only; nothing is written to disk."""
+    require_workspace_branch()
     auth = base64.b64encode(f"x-access-token:{config.PAT}".encode()).decode()
     env = {**os.environ, "GIT_CONFIG_COUNT": "1",
            "GIT_CONFIG_KEY_0": "http.extraheader", "GIT_CONFIG_VALUE_0": f"AUTHORIZATION: basic {auth}",

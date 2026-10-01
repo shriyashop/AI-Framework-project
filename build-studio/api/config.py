@@ -29,6 +29,7 @@ DB_PATH = Path(os.getenv("DB_PATH", str(ROOT / "build_studio.db")))
 WORKSPACES_DIR = Path(os.getenv("WORKSPACES_DIR", str(ROOT / "workspaces")))
 CONSOLE_DIST = ROOT / "console" / "dist"
 TEMPLATES_DIR = ROOT / "templates"
+WORKSPACE_BRANCH = os.getenv("GITHUB_BASE_BRANCH", "poc-workspace")  # local branch name; matches the runner
 POLL_INTERVAL_SECONDS = float(os.getenv("POLL_INTERVAL_SECONDS", "5"))
 RUN_TIMEOUT_SECONDS = int(os.getenv("RUN_TIMEOUT_SECONDS", "1200"))
 MAX_REQUIREMENT_CHARS = int(os.getenv("MAX_REQUIREMENT_CHARS", "8000"))

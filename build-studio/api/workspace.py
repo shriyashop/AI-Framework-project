@@ -79,7 +79,7 @@ def ensure_repo() -> Path:
     d.mkdir(parents=True, exist_ok=True)
     manifest: dict[str, str] = {}
     _copy_tree(config.TEMPLATES_DIR / "repo", d, manifest)
-    git("init", "-b", "main", cwd=d)
+    git("init", "-b", config.WORKSPACE_BRANCH, cwd=d)
     git("add", "-A", cwd=d)
     git("commit", "-m", "Seed shared POC repo from template", cwd=d)
     _save_manifest(manifest)

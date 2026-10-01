@@ -72,6 +72,8 @@ async def create_task(body: TaskIn):
         t = await github.start_task(text)
     except httpx.HTTPStatusError as e:
         raise HTTPException(502, f"GitHub rejected the task: {e.response.status_code} {e.response.text[:300]}")
+    except RuntimeError as e:
+        raise HTTPException(502, str(e))
     return {"task_id": t["id"], "html_url": t.get("html_url"), "model": config.MODEL, "state": t["state"]}
 
 

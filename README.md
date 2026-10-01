@@ -12,4 +12,4 @@ The AI engineering framework (governed `/brd → /plan → /implement …` pipel
 ## Notes
 
 - `build-studio/.env` holds secrets (runner token, and later the GitHub PAT). It is gitignored. Copy `build-studio/.env.example` to create it.
-- The Copilot workspace repo that Build Studio drives is a **separate** repo, set with `GITHUB_REPO`. It is not this one.
+- For the POC, Build Studio drives Copilot in **this same repo**, on an orphan branch `poc-workspace` (`GITHUB_BASE_BRANCH`). Generated apps live in `projects/<slug>/` there. The runner refuses to touch `main`. Protect `main` on GitHub. After the POC this moves to a separate repo (see `build-studio/docs/decisions/ADR-002-shared-repo.md`).
