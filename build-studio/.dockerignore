@@ -1,0 +1,11 @@
+.venv
+.git
+.env
+*.db
+workspaces
+console/node_modules
+console/dist
+tests
+docs
+__pycache__
+.pytest_cache

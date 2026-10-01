@@ -1,0 +1,34 @@
+# Build Studio. The API (with the console) is published on localhost:8020.
+# The runner has no published port: it is reachable only from the API, on the compose network.
+services:
+  api:
+    build: .
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8020
+    ports:
+      - "127.0.0.1:8020:8020"
+    environment:
+      RUNNER_URL: http://runner:8021
+      RUNNER_SHARED_TOKEN: ${RUNNER_SHARED_TOKEN:?set RUNNER_SHARED_TOKEN in .env}
+      RUN_TIMEOUT_SECONDS: ${RUN_TIMEOUT_SECONDS:-1200}
+    volumes:
+      - workspaces:/data/workspaces
+      - db:/data/db
+    depends_on: [runner]
+    restart: unless-stopped
+
+  runner:
+    build: .
+    command: uvicorn runner.main:app --host 0.0.0.0 --port 8021
+    environment:
+      RUNNER_MODE: ${RUNNER_MODE:-fake}
+      RUNNER_SHARED_TOKEN: ${RUNNER_SHARED_TOKEN:?set RUNNER_SHARED_TOKEN in .env}
+      GITHUB_COPILOT_PAT: ${GITHUB_COPILOT_PAT:-}   # only the runner ever receives the PAT
+      GITHUB_REPO: ${GITHUB_REPO:-}
+      COPILOT_MODEL: ${COPILOT_MODEL:-claude-sonnet-4.6}
+    volumes:
+      - workspaces:/data/workspaces
+    restart: unless-stopped
+
+volumes:
+  workspaces:
+  db:

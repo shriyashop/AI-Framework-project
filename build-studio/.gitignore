@@ -1,0 +1,10 @@
+.env
+*.db
+*.db-journal
+workspaces/*
+!workspaces/.gitkeep
+__pycache__/
+.venv/
+.pytest_cache/
+console/node_modules/
+console/dist/
