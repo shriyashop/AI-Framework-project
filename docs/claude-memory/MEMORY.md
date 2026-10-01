@@ -1,0 +1,5 @@
+- [Stack preferences](user-stack-preferences.md): Python/FastAPI over Node, ports in the 8000 series
+- [Plan before executing](feedback-plan-before-executing.md): user wants to review a plan, then approve
+- [Build Studio state](project-build-studio-state.md): increment 1 built, fake-runner only, 59 tests
+- [Copilot route blocked](project-copilot-blocked.md): admin policy off; direction is a Claude-API runner
+- [Repos and ownership](reference-repos-and-ownership.md): which repo is which, what must not be touched
