@@ -1,0 +1,3 @@
+db/expenses.db
+db/*.db-journal
+npm-debug.log
